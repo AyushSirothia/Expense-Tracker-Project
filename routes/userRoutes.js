@@ -4,6 +4,8 @@ const router = express.Router();
 
 const User = require("../models/User");
 
+
+// SIGNUP
 router.post("/signup", async (req, res) => {
 
     try {
@@ -37,5 +39,43 @@ router.post("/signup", async (req, res) => {
         });
     }
 });
+
+
+// LOGIN
+router.post("/login", async (req, res) => {
+
+    try {
+
+        const { email, password } = req.body;
+
+        const user = await User.findOne({
+            where: {
+                email: email,
+                password: password
+            }
+        });
+
+        if (!user) {
+
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "User logged in successfully"
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            message: "Something went wrong"
+        });
+    }
+});
+
 
 module.exports = router;
